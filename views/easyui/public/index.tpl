@@ -2,7 +2,6 @@
 <script type="text/javascript">
 var URL="/public"
     $( function() {
-        //生成树
         $("#tree").tree({
             url:URL+'/index',
             onClick:function(node){
@@ -15,9 +14,9 @@ var URL="/public"
                 if(href){
                     var content = '<iframe scrolling="auto" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>';
                 }else{
-                    var content = '未实现';
+                    var content = 'Not implemented';
                 }
-                //已经存在tabs则选中它
+
                 if(tabs.tabs('exists',node.text)){
                     //选中
                     tabs.tabs('select',node.text);
@@ -81,17 +80,12 @@ var URL="/public"
                 }
             }
         });
-        //修改配色方案
         $("#changetheme").change(function(){
             var theme = $(this).val();
-            $.cookie("theme",theme); //新建cookie
+            $.cookie("theme",theme); 
             location.reload();
         });
-        //设置已选theme的值
-//        var themed = $.cookie('theme');
-//        if(themed){
-//            $("#changetheme").val(themed);
-//        }
+
     });
     function refreshTab(title) {
         var tab = $("#tabs").tabs("getTab", title);
@@ -106,11 +100,11 @@ var URL="/public"
     function modifypassword(){
         $("#dialog").dialog({
             modal:true,
-            title:"修改密码",
+            title:"change Password",
             width:400,
             height:250,
             buttons:[{
-                text:'保存',
+                text:'Save',
                 iconCls:'icon-save',
                 handler:function(){
                     $("#form1").form('submit',{
@@ -121,7 +115,7 @@ var URL="/public"
                         success:function(r){
                             var r = $.parseJSON( r );
                             if(r.status){
-                                $.messager.alert("提示", r.info,'info',function(){
+                                $.messager.alert("prompt", r.info,'info',function(){
                                     location.href = URL+"/logout";
                                 });
                             }else{
@@ -131,7 +125,7 @@ var URL="/public"
                     });
                 }
             },{
-                text:'取消',
+                text:'Cancel',
                 iconCls:'icon-cancel',
                 handler:function(){
                     $("#dialog").dialog("close");
@@ -139,7 +133,6 @@ var URL="/public"
             }]
         });
     }
-    //选择分组
     function selectgroup(group_id){
         $(this).addClass("current");
         vac.ajax(URL+'/index', {group_id:group_id}, 'GET', function(data){
@@ -175,7 +168,7 @@ var URL="/public"
 <body class="easyui-layout" style="text-align:left">
 <div region="north" border="false" style="overflow: hidden; width: 100%; height:82px; background:#D9E5FD;">
     <div style="overflow: hidden; width:200px; padding:2px 0 0 5px;">
-        <h2>BeegoAdmin</h2>
+        <h2>Inventerra Admin</h2>
     </div>
     <ul class="ht_nav">
         {{range .groups}}
@@ -183,8 +176,8 @@ var URL="/public"
         {{end}}
     </ul>
     <div id="header-inner" style="float:right; overflow:hidden; height:80px; width:300px; line-height:25px; text-align:right; padding-right:20px;margin-top:-50px; ">
-        欢迎你！ {{.userinfo.Nickname}} <a href="javascript:void(0);" onclick="modifypassword()"> 修改密码</a>
-        <a href="/public/logout" target="_parent"> 退 出</a>
+        Welcome! {{.userinfo.Nickname}} <a href="javascript:void(0);" onclick="modifypassword()"> Change Password</a>
+        <a href="/public/logout" target="_parent"> Logout</a>
     </div>
 </div>
 <div id="dialog" >
@@ -192,15 +185,15 @@ var URL="/public"
         <form id="form1" method="post">
             <table>
                 <tr>
-                    <td>旧密码</td>
+                    <td>Old Password</td>
                     <td><input type="password"  name="oldpassword" class="easyui-validatebox"  required="true" validType="password[5,20]" missingMessage="请填写当前使用的密码"/></td>
                 </tr>
                 <tr>
-                    <td>新密码：</td>
+                    <td>New Password：</td>
                     <td><input type="password"  name="newpassword" class="easyui-validatebox" required="true" validType="password[5,20]" missingMessage="请填写需要修改的密码"  /></td>
                 </tr>
                 <tr>
-                    <td>重复密码：</td>
+                    <td>Repeat New Password：</td>
                     <td><input type="password"  name="repeatpassword"  class="easyui-validatebox" required="true" validType="password[5,20]" missingMessage="请重复填写需要修改的密码" /></td>
                 </tr>
             </table>
@@ -208,7 +201,7 @@ var URL="/public"
     </div>
 </div>
 </div>
-<div region="west" border="false" split="true" title="菜单"  tools="#toolbar" style="width:200px;padding:5px;">
+<div region="west" border="false" split="true" title="Menu"  tools="#toolbar" style="width:200px;padding:5px;">
     <ul id="tree"></ul>
 </div>
 <div region="center" border="false" >
@@ -216,16 +209,15 @@ var URL="/public"
     </div>
 </div>
 <div id="toolbar">
-    <a href="#" class="icon-undo" title="全部展开"  onclick="undo()"></a>
-    <a href="#" class="icon-redo" title="全部关闭"  onclick="redo()"></a>
+    <a href="#" class="icon-undo" title="Undo"  onclick="undo()"></a>
+    <a href="#" class="icon-redo" title="Redo"  onclick="redo()"></a>
 </div>
-<!--右键菜单-->
 <div id="mm" style="width: 120px;display:none;">
-    <div iconCls='icon-reload' type="refresh">刷新</div>
+    <div iconCls='icon-reload' type="refresh">Refresh</div>
     <div class="menu-sep"></div>
-    <div  type="close">关闭</div>
-    <div type="closeOther">关闭其他</div>
-    <div type="closeAll">关闭所有</div>
+    <div  type="close">Close</div>
+    <div type="closeOther">Close Other</div>
+    <div type="closeAll">Close All</div>
 </div>
 </body>
 </html>
