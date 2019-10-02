@@ -1,14 +1,14 @@
 {{template "../public/header.tpl"}}
 <script type="text/javascript">
 var statuslist = [
-    {statusid:'1',name:'禁用'},
-    {statusid:'2',name:'启用'}
+    {statusid:'1',name:'Disable'},
+    {statusid:'2',name:'Enable'}
 ];
 var URL="/rbac/role";
 $(function(){
     //角色列表
     $("#datagrid").datagrid({
-        title:'角色管理',
+        title:'Role management',
         url:URL+"/index",
         method:'POST',
         pagination:true,
@@ -19,8 +19,8 @@ $(function(){
         idField:'Id',
         columns:[[
             {field:'Id',title:'ID',width:50,align:'center'},
-            {field:'Name',title:'组名',width:150,align:'center',editor:'text'},
-            {field:'Remark',title:'描述',width:250,align:'center',editor:'text'},
+            {field:'Name',title:'Name',width:150,align:'center',editor:'text'},
+            {field:'Remark',title:'Description',width:250,align:'center',editor:'text'},
             // {field:'create_time',title:'添加时间',width:150,align:'center',
             //     formatter:function(value,row,index){
             //         if(value) return phpjs.date("Y-m-d H:i:s",value);
@@ -33,7 +33,7 @@ $(function(){
             //         return value;
             //     }
             // },
-            {field:'Status',title:'状态',width:100,align:'center',
+            {field:'Status',title:'Status',width:100,align:'center',
                 formatter:function(value){
                     for(var i=0; i<statuslist.length; i++){
                         if (statuslist[i].statusid == value) return statuslist[i].name;
@@ -50,10 +50,10 @@ $(function(){
                     }
                 }
             },
-            {field:'action',title:'操作',width:200,align:'center',
+            {field:'action',title:'operating',width:200,align:'center',
                 formatter:function(value,row,index){
-                    var c = '<a href="'+URL+'/AccessToNode?Id='+row.Id+'" target="_blank">授权</a> ';
-                    var d = '<a href="'+URL+'/RoleToUserList?Id='+row.Id+'" target="_blank">用户列表</a> ';
+                    var c = '<a href="'+URL+'/AccessToNode?Id='+row.Id+'" target="_blank">Authorization</a> ';
+                    var d = '<a href="'+URL+'/RoleToUserList?Id='+row.Id+'" target="_blank">user list</a> ';
                     return c+d;
                 }
             }
@@ -99,50 +99,50 @@ $(function(){
 function addrow(){
     var getRows = $("#datagrid").datagrid("getRows");
 
-    //如果没有数据，则从0行开始新增
+
     if(vac.isEmpty(getRows)){
         var lenght = 0;
     }else{
         var lenght = getRows.length;
     }
-    $("#datagrid").datagrid("appendRow",{Status:2});//插入
-    $("#datagrid").datagrid("selectRow",lenght);//选中
-    $("#datagrid").datagrid("beginEdit",lenght);//编辑输入
+    $("#datagrid").datagrid("appendRow",{Status:2});
+    $("#datagrid").datagrid("selectRow",lenght);
+    $("#datagrid").datagrid("beginEdit",lenght);
 }
 function editrow(){
     if(!$("#datagrid").datagrid("getSelected")){
-        vac.alert("请选择要编辑的行");
+        vac.alert("Please select a row to edit");
         return;
     }
     $('#datagrid').datagrid('beginEdit', vac.getindex("datagrid"));
 }
 function saverow(index){
     if(!$("#datagrid").datagrid("getSelected")){
-        vac.alert("请选择要保存的行");
+        vac.alert("Please select a row to save");
         return;
     }
     $('#datagrid').datagrid('endEdit', vac.getindex("datagrid"));
 }
-//取消
+//
 function cancelrow(){
     if(! $("#datagrid").datagrid("getSelected")){
-        vac.alert("请选择要取消的行");
+        vac.alert("Please select a row to cancel");
         return;
     }
     $("#datagrid").datagrid("cancelEdit",vac.getindex("datagrid"));
 }
-//刷新
+//
 function reloadrow(){
     $("#datagrid").datagrid("reload");
 }
 
-//删除
+//
 function delrow(){
-    $.messager.confirm('Confirm','你确定要删除?',function(r){
+    $.messager.confirm('Confirm','Are you sure you want to delete?',function(r){
         if (r){
             var row = $("#datagrid").datagrid("getSelected");
             if(! row){
-                vac.alert("请选择要删除的行");
+                vac.alert("Please select a row to delete");
                 return;
             }
             vac.ajax(URL+'/DelRole', {Id:row.Id}, 'POST', function(r){
@@ -165,21 +165,19 @@ function delrow(){
     <a href="#" icon='icon-cancel' plain="true" onclick="delrow()" class="easyui-linkbutton" >删除</a>
     <a href="#" icon='icon-reload' plain="true" onclick="reloadrow()" class="easyui-linkbutton" >刷新</a>
 </div>
-<!--表格内的右键菜单-->
 <div id="mm" class="easyui-menu" style="width:120px;display: none" >
-    <div iconCls='icon-add' onclick="addrow()">新增</div>
-    <div iconCls="icon-edit" onclick="editrow()">编辑</div>
-    <div iconCls='icon-save' onclick="saverow()">保存</div>
-    <div iconCls='icon-cancel' onclick="cancelrow()">取消</div>
+    <div iconCls='icon-add' onclick="addrow()">New</div>
+    <div iconCls="icon-edit" onclick="editrow()">Edit</div>
+    <div iconCls='icon-save' onclick="saverow()">Save</div>
+    <div iconCls='icon-cancel' onclick="cancelrow()">Cancel</div>
     <div class="menu-sep"></div>
-    <div iconCls='icon-cancel' onclick="delrow()">删除</div>
-    <div iconCls='icon-reload' onclick="reloadrow()">刷新</div>
+    <div iconCls='icon-cancel' onclick="delrow()">Delete</div>
+    <div iconCls='icon-reload' onclick="reloadrow()">Refresh</div>
     <div class="menu-sep"></div>
     <div>Exit</div>
 </div>
-<!--表头的右键菜单-->
 <div id="mm1" class="easyui-menu" style="width:120px;display: none"  >
-    <div icon='icon-add' onclick="addrow()">新增</div>
+    <div icon='icon-add' onclick="addrow()">New</div>
 </div>
 </body>
 </html>
