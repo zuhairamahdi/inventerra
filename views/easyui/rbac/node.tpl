@@ -2,8 +2,8 @@
 <script type="text/javascript">
     var grouplist=$.parseJSON({{.grouplist | stringsToJson}});
     var products = [
-        {productid:'1',name:'禁用'},
-        {productid:'2',name:'启用'}
+        {productid:'1',name:'Disable'},
+        {productid:'2',name:'Enable'}
     ];
     var URL="/rbac/node";
     $(function(){
@@ -13,10 +13,10 @@
             treeField:"Title",
             fitColumns:"true",
             columns:[[
-                {field:'Title',title:'显示名',width:150,editor:'text'},
+                {field:'Title',title:'Title',width:150,editor:'text'},
                 {field:'Id',title:'ID',width:50},
-                {field:'Name',title:'应用名',width:100,editor:'text'},
-                {field:'Group__Id',title:'分组',width:80,
+                {field:'Name',title:'Name',width:100,editor:'text'},
+                {field:'Group__Id',title:'Grouping',width:80,
                     formatter:function(value){
                         for(var i=0; i<grouplist.length; i++){
                             if (grouplist[i].Id == value) return grouplist[i].Title;
@@ -24,7 +24,7 @@
                         return value;
                     }
                 },
-                {field:'Status',title:'状态',width:50,align:'center',
+                {field:'Status',title:'Status',width:50,align:'center',
                     formatter:function(value){
                         for(var i=0; i<products.length; i++){
                             if (products[i].productid == value) return products[i].name;
@@ -41,7 +41,7 @@
                         }
                     }
                 },
-                {field:'Remark',title:'描述',width:150,editor:'text'}
+                {field:'Remark',title:'Description',width:150,editor:'text'}
             ]],
             onAfterEdit:function(c){
                 if(vac.isEmpty(c)){
@@ -92,7 +92,7 @@
         }
     });
 });
-    //新增行
+
     function addrow(){
         var Row = $("#treegrid").treegrid("getSelected");
         var _group = $("#group").combobox("getValue");
@@ -102,23 +102,22 @@
             data[0].Pid =Row.Id;
             $("#treegrid").treegrid("expand",Row.Id);//展开节点
             if($("#treegrid").treegrid("getLevel",Row.Id) >2){
-                vac.alert("不允许添加");
+                vac.alert("Not allowed to add");
                 return false;
             }
         }
-        //如果没有数据，则从0行开始新增
+
         $("#treegrid").treegrid("append",{
             parent: (Row?Row.Id:null),
             data:data
         });
-        $("#treegrid").treegrid("select",0);//选中
-        $("#treegrid").treegrid("beginEdit",0);//编辑输入
+        $("#treegrid").treegrid("select",0);
+        $("#treegrid").treegrid("beginEdit",0);
     }
-    //编辑
     function editrow(){
         var row = $("#treegrid").treegrid("getSelected");
         if(!row){
-            vac.alert("请选择要编辑的行");
+            vac.alert("Please select a row to edit");
             return;
         }
         $("#treegrid").treegrid("beginEdit",row.Id);
@@ -127,7 +126,7 @@
     function saverow(){
         var row = $("#treegrid").treegrid("getSelected");
         if(!row){
-            vac.alert("请选择要保存的行");
+            vac.alert("Please select a row to save");
             return;
         }
         $("#treegrid").treegrid("endEdit",row.Id);
@@ -136,18 +135,18 @@
     function cancelrow(){
         var row = $("#treegrid").treegrid("getSelected");
         if(!row){
-            vac.alert("请选择要取消的行");
+            vac.alert("Please select a row to cancel");
             return;
         }
         $("#treegrid").treegrid("cancelEdit",row.Id);
     }
     //删除
     function delrow(){
-        $.messager.confirm('Confirm','你确定要删除?',function(r){
+        $.messager.confirm('Confirm','Are you sure you want to delete?',function(r){
             if (r){
                 var row = $("#treegrid").treegrid("getSelected");
                 if(!row){
-                    vac.alert("请选择要删除的行");
+                    vac.alert("Please select a row to delete");
                     return;
                 }
                 vac.ajax(URL+'/DelNode', {Id:row.Id}, 'POST', function(r){
@@ -167,7 +166,7 @@
 
 </script>
 <body>
-<table id="treegrid" title="节点管理" class="easyui-treegrid" toolbar="#tb"></table>
+<table id="treegrid" title="Node management" class="easyui-treegrid" toolbar="#tb"></table>
 <div id="tb" style="padding:5px;height:auto">
     <input id="group"/>
     <a href="#" icon='icon-add' plain="true" onclick="addrow()" class="easyui-linkbutton" >新增</a>
@@ -179,19 +178,19 @@
 </div>
 <!--表格内的右键菜单-->
 <div id="mm" class="easyui-menu" style="width:120px;display: none" >
-    <div iconCls='icon-add' onclick="addrow()">新增</div>
-    <div iconCls="icon-edit" onclick="editrow()">编辑</div>
-    <div iconCls='icon-save' onclick="saverow()">保存</div>
-    <div iconCls='icon-cancel' onclick="cancelrow()">取消</div>
+    <div iconCls='icon-add' onclick="addrow()">New</div>
+    <div iconCls="icon-edit" onclick="editrow()">Edit</div>
+    <div iconCls='icon-save' onclick="saverow()">Save</div>
+    <div iconCls='icon-cancel' onclick="cancelrow()">Cancel</div>
     <div class="menu-sep"></div>
-    <div iconCls='icon-cancel' onclick="delrow()">删除</div>
-    <div iconCls='icon-reload' onclick="reloadrow()">刷新</div>
+    <div iconCls='icon-cancel' onclick="delrow()">Delete</div>
+    <div iconCls='icon-reload' onclick="reloadrow()">Refresh</div>
     <div class="menu-sep"></div>
     <div>Exit</div>
 </div>
 <!--表头的右键菜单-->
 <div id="mm1" class="easyui-menu" style="width:120px;display: none"  >
-    <div icon='icon-add' onclick="addrow()">新增</div>
+    <div icon='icon-add' onclick="addrow()">New</div>
 </div>
 </body>
 </html>
