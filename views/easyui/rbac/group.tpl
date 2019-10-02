@@ -2,14 +2,14 @@
 
 <script type="text/javascript">
 var statuslist = [
-    {id:'1',text:'禁用'},
-    {id:'2',text:'启用'}
+    {id:'1',text:'Disable'},
+    {id:'2',text:'Enable'}
 ];
 var URL="/rbac/group";
 $(function(){
     //用户列表
     $("#datagrid").datagrid({
-        title:'分组列表',
+        title:'Group list',
         url:URL+'/index',
         method:'POST',
         pagination:true,
@@ -23,11 +23,11 @@ $(function(){
         pageList:[10,20,30,50,100],
         columns:[[
             {field:'Id',title:'ID',width:50},
-            {field:'Name',title:'分组名',width:100,align:'center',editor:'text'},
-            {field:'Title',title:'显示名',width:100,align:'center',editor:'text'},
+            {field:'Name',title:'Name',width:100,align:'center',editor:'text'},
+            {field:'Title',title:'Title',width:100,align:'center',editor:'text'},
 
-            {field:'Sort',title:'排序',width:50,align:'center',editor:'numberbox'},
-            {field:'Status',title:'状态',width:50,align:'center',
+            {field:'Sort',title:'Sort',width:50,align:'center',editor:'numberbox'},
+            {field:'Status',title:'Status',width:50,align:'center',
                 formatter:function(value){
                     for(var i=0; i<statuslist.length; i++){
                         if (statuslist[i].id == value) return statuslist[i].text;
@@ -77,7 +77,6 @@ $(function(){
             });
         }
     });
-    //创建添加分组窗口
     $("#dialog").dialog({
         modal:true,
         resizable:true,
@@ -104,7 +103,7 @@ $(function(){
                 });
             }
         },{
-            text:'取消',
+            text:'Cancel',
             iconCls:'icon-cancel',
             handler:function(){
                 $("#dialog").dialog("close");
@@ -116,32 +115,30 @@ $(function(){
 
 function editrow(){
     if(!$("#datagrid").datagrid("getSelected")){
-        vac.alert("请选择要编辑的行");
+        vac.alert("Please select a row to edit");
         return;
     }
     $('#datagrid').datagrid('beginEdit', vac.getindex("datagrid"));
 }
 function saverow(index){
     if(!$("#datagrid").datagrid("getSelected")){
-        vac.alert("请选择要保存的行");
+        vac.alert("Please select a row to save");
         return;
     }
     $('#datagrid').datagrid('endEdit', vac.getindex("datagrid"));
 }
-//取消
+//
 function cancelrow(){
     if(! $("#datagrid").datagrid("getSelected")){
-        vac.alert("请选择要取消的行");
+        vac.alert("Please select a row to cancel");
         return;
     }
     $("#datagrid").datagrid("cancelEdit",vac.getindex("datagrid"));
 }
-//刷新
 function reloadrow(){
     $("#datagrid").datagrid("reload");
 }
 
-//添加用户弹窗
 function addrow(){
     $("#dialog").dialog('open');
     $("#form1").form('clear');
@@ -149,11 +146,11 @@ function addrow(){
 
 //删除
 function delrow(){
-    $.messager.confirm('Confirm','你确定要删除?',function(r){
+    $.messager.confirm('Confirm','Are you sure you want to delete?',function(r){
         if (r){
             var row = $("#datagrid").datagrid("getSelected");
             if(!row){
-                vac.alert("请选择要删除的行");
+                vac.alert("Please select a row to delete");
                 return;
             }
             vac.ajax(URL+'/DelGroup', {Id:row.Id}, 'POST', function(r){
@@ -170,50 +167,48 @@ function delrow(){
 <body>
 <table id="datagrid" toolbar="#tb"></table>
 <div id="tb" style="padding:5px;height:auto">
-    <a href="#" icon='icon-add' plain="true" onclick="addrow()" class="easyui-linkbutton" >新增</a>
-    <a href="#" icon='icon-edit' plain="true" onclick="editrow()" class="easyui-linkbutton" >编辑</a>
-    <a href="#" icon='icon-save' plain="true" onclick="saverow()" class="easyui-linkbutton" >保存</a>
-    <a href="#" icon='icon-cancel' plain="true" onclick="delrow()" class="easyui-linkbutton" >删除</a>
-    <a href="#" icon='icon-reload' plain="true" onclick="reloadrow()" class="easyui-linkbutton" >刷新</a>
+    <a href="#" icon='icon-add' plain="true" onclick="addrow()" class="easyui-linkbutton" >New</a>
+    <a href="#" icon='icon-edit' plain="true" onclick="editrow()" class="easyui-linkbutton" >Edit</a>
+    <a href="#" icon='icon-save' plain="true" onclick="saverow()" class="easyui-linkbutton" >Save</a>
+    <a href="#" icon='icon-cancel' plain="true" onclick="delrow()" class="easyui-linkbutton" >Delete</a>
+    <a href="#" icon='icon-reload' plain="true" onclick="reloadrow()" class="easyui-linkbutton" >Refresh</a>
 </div>
-<!--表格内的右键菜单-->
 <div id="mm" class="easyui-menu" style="width:120px;display: none" >
-    <div iconCls='icon-add' onclick="addrow()">新增</div>
-    <div iconCls="icon-edit" onclick="editrow()">编辑</div>
-    <div iconCls='icon-save' onclick="saverow()">保存</div>
-    <div iconCls='icon-cancel' onclick="cancelrow()">取消</div>
+    <div iconCls='icon-add' onclick="addrow()">New</div>
+    <div iconCls="icon-edit" onclick="editrow()">Edit</div>
+    <div iconCls='icon-save' onclick="saverow()">Save</div>
+    <div iconCls='icon-cancel' onclick="cancelrow()">Cancel</div>
     <div class="menu-sep"></div>
-    <div iconCls='icon-cancel' onclick="delrow()">删除</div>
-    <div iconCls='icon-reload' onclick="reloadrow()">刷新</div>
+    <div iconCls='icon-cancel' onclick="delrow()">Delete</div>
+    <div iconCls='icon-reload' onclick="reloadrow()">Refresh</div>
     <div class="menu-sep"></div>
     <div>Exit</div>
 </div>
-<!--表头的右键菜单-->
 <div id="mm1" class="easyui-menu" style="width:120px;display: none"  >
     <div icon='icon-add' onclick="addrow()">新增</div>
 </div>
-<div id="dialog" title="添加分组" style="width:400px;height:300px;">
+<div id="dialog" title="Add Group" style="width:400px;height:300px;">
     <div style="padding:20px 20px 40px 80px;" >
         <form id="form1" method="post">
             <table>
                 <tr>
-                    <td>分组名称：</td>
+                    <td>Group Name:</td>
                     <td><input name="Name" class="easyui-validatebox" required="true"/></td>
                 </tr>
                 <tr>
-                    <td>显示名：</td>
+                    <td>Display name:</td>
                     <td><input name="Title" class="easyui-validatebox" required="true"  /></td>
                 </tr>
                 <tr>
-                    <td>排序：</td>
+                    <td>Sort:</td>
                     <td><input name="Sort" class="easyui-numberbox" required="true"  /></td>
                 </tr>
                 <tr>
-                    <td>状态：</td>
+                    <td>Status:</td>
                     <td>
                         <select name="Status"  style="width:153px;" class="easyui-combobox " data-options="value:2" editable="false" required="true"  >
-                            <option value="2" >启用</option>
-                            <option value="1">禁用</option>
+                            <option value="2" >Enable</option>
+                            <option value="1">Disable</option>
                         </select>
                     </td>
                 </tr>
